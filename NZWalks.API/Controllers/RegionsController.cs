@@ -7,6 +7,7 @@ using NZWalks.API.CustomActionFilters;
 using NZWalks.API.Data;
 using NZWalks.API.Models.Domain;
 using NZWalks.API.Models.DTO;
+using System.Text.Json;
 
 namespace NZWalks.API.Controllers
 {
@@ -16,10 +17,13 @@ namespace NZWalks.API.Controllers
     {
         private readonly NZWalksDBContext _dbContext;
         private readonly IMapper _mapper;
-        public RegionsController(NZWalksDBContext dbContext,IMapper mapper)
+        private readonly ILogger _logger;
+
+        public RegionsController(NZWalksDBContext dbContext,IMapper mapper,ILogger<RegionsController> logger)
         {
             this._dbContext = dbContext;
             this._mapper = mapper;
+            this._logger = logger;
         }
         //[HttpGet]
         //public IActionResult GetAll()
@@ -54,9 +58,10 @@ namespace NZWalks.API.Controllers
         [HttpGet]
         public IActionResult GetAllRegions()
         {
+            _logger.LogInformation("Get all action method invoked");
             //get data from database
             var regions = _dbContext.regions.ToList();
-
+            _logger.LogInformation($"Get regions with the data:{JsonSerializer.Serialize(regions)}");
             ////map domain models to DTO's
             //var regionsList = new List<RegionDTO>();
             //foreach(var region in regions) 
